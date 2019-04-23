@@ -16,7 +16,7 @@ celery = make_celery(app)
 
 
 @app.route('/consume/api/', methods=['GET'])
-def consume_api(url):
+def consume_api():
 
     json_data = request.get_json(force=True)
     if not json_data:
