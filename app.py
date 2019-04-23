@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 
 from tasker.task_celery import make_celery
 from utils import mylogger
@@ -15,12 +15,18 @@ app.config.update(
 celery = make_celery(app)
 
 
-@app.route('/consume/api/<url>', methods=['GET'])
+@app.route('/consume/api/', methods=['GET'])
 def consume_api(url):
-    consumeapi.delay(url)
+
+    json_data = request.get_json(force=True)
+    if not json_data:
+        return {'message': 'No input data provided'}, 400
+    data = json_data['data']
+    consumeapi.delay(data)
     return 'processing URL'
 
-
+# this celery task process the URL sent by the chatroom and consume and return the data
+# todo process the celery response
 @celery.task(name='app.consumeapi')
 def consumeapi(url):
     api = Consume(url=url)
