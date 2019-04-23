@@ -18,7 +18,7 @@ celery = make_celery(app)
 @app.route('/consume/api/<url>', methods=['GET'])
 def consume_api(url):
     consumeapi.delay(url)
-    return url
+    return 'processing URL'
 
 
 @celery.task(name='app.consumeapi')
@@ -28,7 +28,7 @@ def consumeapi(url):
     if data is not None:
         return data
     else:
-        return None
+        raise Exception(f'GET {url} returned unexpected response code:')
 
 
 if __name__ == '__main__':

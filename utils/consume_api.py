@@ -1,5 +1,7 @@
 import requests
 
+# this class consume and return the raw data form the API
+
 
 class Consume(object):
     url = None
